@@ -41,6 +41,12 @@ const Header = () => {
     dispatch(toggleMenu());
   };
 
+  const handleSearch = (value) => {
+  console.log("Selected:", value);
+  setSearchQuery(value);
+  setShowSuggestions(false);
+};
+
   return (
     <div className="grid grid-flow-col p-5 m-2 shadow-lg">
       <div className="flex col-span-1">
@@ -65,20 +71,21 @@ const Header = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setShowSuggestions(false)}
+          //rem this: This gives React a chance to handle the onClick on the list item before hiding suggestions.
+          onBlur={() => setTimeout(()=>setShowSuggestions(false),1000)}
         />
         <button className="border border-gray-400 py-2 px-5 rounded-r-full bg-gray-100">
           🔍
         </button>
         {showSuggestions && suggestions.length > 0 && (
-          <div className="border border-slate-500 shadow-lg w-[33.7rem] rounded-lg sticky bg-white py-2 px-5">
+          <div className="border border-slate-500 shadow-lg w-[33.7rem] rounded-lg absolute bg-white py-2 px-5">
             <ul className="text-lg ">
               {showSuggestions &&
                 suggestions.map((s) => {
                   return (
                     <li
                       key={s}
-                      className="flex items-center gap-2 p-3 hover:bg-slate-200 cursor-pointer"
+                      className="flex items-center gap-2 p-3 hover:bg-slate-200 cursor-pointer" onClick={()=>handleSearch(s)}
                     >
                       <svg
                         className="w-5 h-5 text-gray-500"
