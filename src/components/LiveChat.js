@@ -3,28 +3,33 @@ import ChatMessage from './ChatMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMessages } from '../utils/chatSlice';
 import store from '../utils/store';
+import { generateRandomeName, generateRandomId } from '../utils/helper';
 
 const LiveChat = () => {
     const dispatch=useDispatch();
 
-    const chatMessgaes=useSelector(store=>store.chat.messages)
+    const chatMessages=useSelector(store=>store.chat.messages)
 
     useEffect(()=>{
         const i=setInterval(()=>{
             //API polling
             console.log("API polling");
             dispatch(addMessages({
-                name:"Kirti Sahai",
-                message:"lorem lipsum dolor"
+                name:generateRandomeName(),
+                message:generateRandomId(7)
             }))
 
-        },2000);
+        },500);
 
         return ()=>clearInterval(i)
     },[])
   return (
-    <div className='w-full h-[600px] ml-2 p-2 border border-black bg-slate-100 rounded-lg'>
-        <ChatMessage name="Kirti Sahai" message="This is Youtube"/>
+    <div className='w-full h-[600px] ml-2 p-2 border border-black bg-slate-100 rounded-lg overflow-y-scroll flex flex-col-reverse'>
+        {chatMessages.map((chats,i)=>
+
+        <ChatMessage index={i} name={chats.name} message={chats.message}/>
+        )}
+        
     </div>
   )
 }
